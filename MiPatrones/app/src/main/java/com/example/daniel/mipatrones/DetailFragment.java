@@ -19,7 +19,7 @@ public class DetailFragment extends Fragment {
 
         // Parametros desde la actividad DetailActivity
         Bundle bundle = getActivity().getIntent().getExtras();
-        Persona mFilosofo = bundle.getParcelable(MainActivity.EXTRA_MESSAGE);
+        Persona mPersona = bundle.getParcelable(MainActivity.EXTRA_MESSAGE);
         String mPackage = bundle.getString(DetailActivity.EXTRA_MESSAGE);
 
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
@@ -27,9 +27,9 @@ public class DetailFragment extends Fragment {
         nombre = (TextView)view.findViewById(R.id.nombre);
         imagen = (ImageView)view.findViewById(R.id.imagen);
 
-        nombre.setText(mFilosofo.getNombre());
+        nombre.setText(mPersona.getNombre());
 
-        int resID = getResources().getIdentifier(mFilosofo.getImagen() , "drawable", mPackage);
+        int resID = getResources().getIdentifier(mPersona.getImagen() , "drawable", mPackage);
         imagen.setImageResource(resID);
 
         return view;
