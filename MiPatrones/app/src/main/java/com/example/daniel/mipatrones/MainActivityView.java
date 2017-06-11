@@ -13,8 +13,11 @@ public interface MainActivityView {
     void hideProgress();
 
     // Mostrar los items de la lista en la UI
-    void setItems(List<String> items);
+    void setItems(List<Persona> items);
 
     // Mostrar mensaje en la UI
     void showMessage(String message);
+
+    //mostrar detalle de un item de la lista en un fragmento
+    void showDetail(Persona persona);
 }

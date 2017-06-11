@@ -11,16 +11,16 @@ import java.util.ArrayList;
 // Capa de datos (Model)
 //    Obtiene los valores de la fuente de datos
 public class DataBaseDataSourceImpl implements DataBaseDataSource {
+    private Context mContext;
+    public DataBaseDataSourceImpl(Context context) {
+        mContext = context;
+    }
 
     @Override
-    public List<String> obtainItems() throws BaseDataItemsException {
-
-        List<String> items = null;
-
+    public List<Persona> obtainItems() throws BaseDataItemsException {
+        List<Persona> items;
         try {
-
-            // TODO: Obtener de la base de datos
-            items = createArrayList();
+            items = getPersonas(mContext);
 
         } catch (Exception e) {
             throw new BaseDataItemsException(e.getMessage());
@@ -29,44 +29,30 @@ public class DataBaseDataSourceImpl implements DataBaseDataSource {
         return items;
     }
 
-    // Esta lista debe recuperarla de la base de datos
-    //   para el ejemplo la inicializamos con datos dummy
-    private List<String> createArrayList() {
-        return Arrays.asList(
-                "Soda 1",
-                "Soda 2",
-                "Soda 3",
-                "Soda 4",
-                "Soda 5",
-                "Soda 6",
-                "Soda 7",
-                "Soda 8",
-                "Soda 9",
-                "Soda 10"
-        );
-    }
 
-    public String[] buscarPersonas(Context applicationContext) {
-        ArrayList<String> lista = new ArrayList<String>();
+    public List<Persona> getPersonas(Context applicationContext) {
+        ArrayList<Persona> lista = new ArrayList<Persona>();
         DataBaseHelper dataBaseHelper = new DataBaseHelper(applicationContext);
         SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA
-                + " where fechaInicio = ", null);
-        if (c.getCount() != 0) {
-            if (c.moveToFirst()) {
-                do {
-                    String nombre = c.getString(1);
-                    lista.add(nombre);
-                } while (c.moveToNext());
+        Cursor c = null;
+        try {
+            c = db.rawQuery("SELECT * FROM " + DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA, null);
+            if (c.getCount() > 0) {
+                if (c.moveToFirst()) {
+                    do {
+                        String id = c.getString(c.getColumnIndexOrThrow(DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA + "." + DataBaseContract.DataBaseEntry._ID));
+                        String nombre = c.getString(c.getColumnIndexOrThrow(DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA + "." + DataBaseContract.DataBaseEntry.COLUMN_NAME_NOMBRE));
+                        String imagen = c.getString(c.getColumnIndexOrThrow(DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA + "." + DataBaseContract.DataBaseEntry.COLUMN_NAME_IMAGEN));
+                        Persona p = new Persona(id, nombre, imagen);
+                        lista.add(p);
+                    } while (c.moveToNext());
+                }
             }
         }
-        c.close();
-        db.close();
-        int tamano = lista.size();
-        String[] values = new String[tamano];
-        for (int i = 0; i < tamano; i++) {
-            values[i] = lista.get(i);
+        finally {
+            c.close();
+            db.close();
         }
-        return values;
+        return lista;
     }
 }

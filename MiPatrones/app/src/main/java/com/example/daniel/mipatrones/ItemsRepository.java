@@ -3,10 +3,8 @@ package com.example.daniel.mipatrones;
 import java.util.List;
 
 // Capa de datos (Model)
-//    El repositorio decide de que fuente de datos obtiene los valroes
+//    El repositorio decide de que fuente de datos obtiene los valores
 public interface ItemsRepository {
 
-    List<String> obtainItems() throws
-            CantRetrieveItemsException;
-
+    List<Persona> obtainItems() throws CantRetrieveItemsException;
 }

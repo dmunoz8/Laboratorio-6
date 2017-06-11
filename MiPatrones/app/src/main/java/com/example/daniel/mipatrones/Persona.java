@@ -15,10 +15,6 @@ public class Persona implements Parcelable{
     private String nombre;
     private String imagen;
 
-    public Persona()
-    {
-
-    }
 
     public Persona(String id, String nombre, String imagen) {
         this.id = id;
@@ -79,6 +75,7 @@ public class Persona implements Parcelable{
         }
     };
 
+/*
     public long insertar(Context context) {
         // usar la clase DataBaseHelper para realizar la operacion de insertar
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
@@ -92,6 +89,5 @@ public class Persona implements Parcelable{
         return db.insert(DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA, null,
                 values);
     }
-
-
+*/
 }

@@ -1,5 +1,7 @@
 package com.example.daniel.mipatrones;
 
+import android.content.Context;
+
 import java.util.List;
 
 // Capa de datos (Model)
@@ -7,17 +9,21 @@ import java.util.List;
 public class ItemsRepositoryImpl implements ItemsRepository {
 
     private DataBaseDataSource mDataBaseDataSource;
+    private Context mContext;
+
+    public ItemsRepositoryImpl(Context mContext) {
+        this.mContext = mContext;
+    }
 
     @Override
-    public List<String> obtainItems() throws CantRetrieveItemsException {
+    public List<Persona> obtainItems() throws CantRetrieveItemsException {
 
-        List<String> items = null;
+        List<Persona> items = null;
         // Se realizan las llamadas a las fuentes de datos de donde se obtienen los datos
         //    Ejemplo: base de datos local, archivos locales, archivos en la red, bases de datos en la red
 
         try {
-
-            mDataBaseDataSource = new DataBaseDataSourceImpl();
+            mDataBaseDataSource = new DataBaseDataSourceImpl(mContext);
             items = mDataBaseDataSource.obtainItems();
 
         } catch (BaseDataItemsException e) {

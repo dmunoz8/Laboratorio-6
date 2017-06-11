@@ -1,5 +1,7 @@
 package com.example.daniel.mipatrones;
 
+import android.content.Context;
+
 import java.util.List;
 
 // Capa de presentacion (Presenter)
@@ -13,10 +15,10 @@ public class MainActivityPresenterImpl implements
     private MainActivityView mMainActivityView;
     private GetListItemsInteractor mGetListItemsInteractor;
 
-    public MainActivityPresenterImpl(MainActivityView mainActivityView) {
+    public MainActivityPresenterImpl(MainActivityView mainActivityView, Context context) {
         this.mMainActivityView = mainActivityView;
         // Capa de negocios (Interactor)
-        this.mGetListItemsInteractor = new GetListItemsInteractorImpl();
+        this.mGetListItemsInteractor = new GetListItemsInteractorImpl(context);
     }
 
     @Override public void onResume() {
@@ -29,9 +31,10 @@ public class MainActivityPresenterImpl implements
     }
 
     // Evento de clic en la lista
-    @Override public void onItemClicked(int position) {
+    @Override public void onItemClicked(Persona p) {
         if (mMainActivityView != null) {
-            mMainActivityView.showMessage(String.format("Position %d clicked", position + 1));
+            mMainActivityView.showMessage(String.format("Se seleccionó a la persona %s", p.getNombre()));
+            mMainActivityView.showDetail(p);
         }
     }
 
@@ -39,7 +42,7 @@ public class MainActivityPresenterImpl implements
         mMainActivityView = null;
     }
 
-    @Override public void onFinished(List<String> items) {
+    @Override public void onFinished(List<Persona> items) {
         if (mMainActivityView != null) {
             mMainActivityView.setItems(items);
             mMainActivityView.hideProgress();

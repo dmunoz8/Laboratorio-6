@@ -8,7 +8,7 @@ import java.util.List;
 public interface GetListItemsInteractor {
 
     interface OnFinishedListener {
-        void onFinished(List<String> items);
+        void onFinished(List<Persona> items);
     }
 
     void getItems(OnFinishedListener listener);

@@ -30,6 +30,9 @@ public final class DataBaseContract {
 
     public static final String SQL_DELETE_PERSONA =
             "DROP TABLE IF EXISTS " + DataBaseEntry.TABLE_NAME_PERSONA;
-
-
+    public static final String SQL_INSERT_PERSONAS =
+            "INSERT INTO "+DataBaseEntry.TABLE_NAME_PERSONA + " VALUES "+
+                    "('1','Julian Solano Masis', 'p1'),"+
+                    "('2','Karla Benavides Herrera', 'p2'),"+
+                    "('3','Carlos Brenes Calvo', 'p3')";
 }

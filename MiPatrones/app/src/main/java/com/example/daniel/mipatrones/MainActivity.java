@@ -1,5 +1,7 @@
 package com.example.daniel.mipatrones;
 
+import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -34,24 +36,29 @@ public class MainActivity extends AppCompatActivity implements
         // interface para implementar el listener del metodo onItemClick de la lista
         AdapterView.OnItemClickListener {
 
+    public static String EXTRA_MESSAGE = "MPersona";
     private ListView mListView;
     private ProgressBar mProgressBar;
     private MainActivityPresenter mMainActivityPresenter;
+    private List<Persona> mPersonas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        insertarPersona();
-
-        mListView = (ListView) findViewById(R.id.list);
-        mListView.setOnItemClickListener(this);
-
         mProgressBar = (ProgressBar) findViewById(R.id.progress);
-
+        mListView = (ListView) findViewById(R.id.lista);
+        mListView.setOnItemClickListener(this);
         // Llamada al Presenter
-        mMainActivityPresenter = new MainActivityPresenterImpl(this);
+        mMainActivityPresenter = new MainActivityPresenterImpl(this, getApplicationContext());
+    }
+
+    @Override
+    public void showDetail(Persona persona) {
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(MainActivity.EXTRA_MESSAGE, persona);
+        intent.putExtra(DetailActivity.EXTRA_MESSAGE, getPackageName());
+        startActivity(intent);
     }
 
     @Override
@@ -99,8 +106,12 @@ public class MainActivity extends AppCompatActivity implements
     // Mostrar los items de la lista en la UI
     //    Con la lista de items muestra la lista
     @Override
-    public void setItems(List<String> items) {
-        mListView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items));
+    public void setItems(List<Persona> items) {
+        mPersonas = items;
+        Resources mResources = getResources();
+        String mPackage = getPackageName();
+        LazyAdapter mAdapter = new LazyAdapter(items, getApplicationContext(), mResources, mPackage);
+        mListView.setAdapter(mAdapter);
     }
 
     // Mostrar mensaje en la UI
@@ -112,21 +123,6 @@ public class MainActivity extends AppCompatActivity implements
     // Evento al dar clic en la lista
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mMainActivityPresenter.onItemClicked(position);
-    }
-
-    private void insertarPersona() {
-        // Instancia la clase Estudiante y realiza la inserción de datos
-        Persona persona = new Persona("1-1000-1000", "Juan", "Imagen1");
-        // inserta el estudiante, se le pasa como parametro el contexto de la app
-        long newRowId = persona.insertar(getApplicationContext());
-
-        persona = new Persona("2-2000-2000", "Pedro", "Imagen2");
-        // inserta el estudiante, se le pasa como parametro el contexto de la app
-        newRowId = persona.insertar(getApplicationContext());
-
-        persona = new Persona("3-3000-3000", "Pablo", "Imagen3");
-        // inserta el estudiante, se le pasa como parametro el contexto de la app
-        newRowId = persona.insertar(getApplicationContext());
+        mMainActivityPresenter.onItemClicked(mPersonas.get(position));
     }
 }
